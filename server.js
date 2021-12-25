@@ -70,14 +70,13 @@ const io=require("socket.io")(server,{
     origin:process.env.CLIENT_APP_URL
   }
 })
+
 io.on("connection",(socket)=>{
   console.log(`connected to socket io on my Dosti`)
   socket.on("setup",(userData)=>{
     socket.join(userData._id)
     console.log("connected to userId ",userData._id)
-
     socket.emit("connected")
-
   })
 
   socket.on("joinChat",(room)=>{
@@ -92,6 +91,30 @@ io.on("connection",(socket)=>{
     socket.in(room).emit("stopTyping")
   })
 
+  socket.on("userLogin",(loggedData)=>{
+    
+    if(!loggedData.chatData) return console.log("chat not defined on login")
+    loggedData.chatData.forEach(chat=>{
+        chat.users.forEach(user=>{
+          if(user._id==loggedData.authUser._id) return
+          socket.in(user._id).emit("userLogged",loggedData.authUser._id)
+        })
+    })
+
+  })
+  socket.on("userLogout",(loggedData)=>{
+    if(!loggedData.chatData) return console.log("chat not defined on logout")
+    loggedData.chatData.forEach(chat=>{
+        chat.users.forEach(user=>{
+          if(user._id==loggedData.authUser._id) return
+          socket.in(user._id).emit("userLoggedOut",loggedData.authUser._id)
+        })
+    })
+
+  })
+
+
+
   socket.on("newMessage",(newMsgReceived)=>{
     var chat=newMsgReceived.chat
     if(!chat.users) return console.log("chat.users not defined")
@@ -102,12 +125,11 @@ io.on("connection",(socket)=>{
       socket.in(user._id).emit("messageReceived",newMsgReceived)
 
     })
-
-
-
   })
+
   socket.off("setup",()=>{
     console.log("user disconncted")
     socket.leave(userData._id)
+    console.log(`user is leave `,userData._id)
   })
 })

@@ -18,7 +18,7 @@ const accessChatCtrl=async(req,res)=>{
 
     isChat =await User.populate(isChat,{
       path:"latestMessage",
-      select:"name pic email"
+      select:"name pic email isOnline"
     })
     if(isChat.length >0){
       return res.status(201).json({ChatData:isChat[0]})
@@ -32,7 +32,7 @@ const accessChatCtrl=async(req,res)=>{
 
        isGroupChat =await User.populate(isGroupChat,{
         path:"latestMessage",
-        select:"name pic email"
+        select:"name pic email isOnline"
       })
       if(isGroupChat.length >0){
         return res.status(201).json({ChatData:isGroupChat[0]})

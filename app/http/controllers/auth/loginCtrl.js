@@ -4,22 +4,27 @@ const User=require("../../../models/usersModel")
 const loginController=async(req,res)=>{
   try{
     const {email,password}=req.body
-    const userExists=await User.findOne({email})
+    const userExists=await User.findOneAndUpdate({email},{isOnline:true},{new:true})
     if(userExists){
 
       if(await userExists.authenticate(password)){
+        //const showUser=User.findByIdAndUpdate(userExists._id,{isOnline:true},{new:true})
         const userToken=jwt.sign({id:userExists._id},process.env.JWT_SECRET)
+
         const sendUser={
           _id:userExists._id,
           name:userExists.name,
           email:userExists.email,
           pic:userExists.pic,
-          createdAt:userExists.createdAt
+          isOnline:userExists.isOnline,
+          createdAt:userExists.createdAt,
+          updatedAt:userExists.updatedAt,
         }
         return res.status(201).json({
           message:"Login successfull",
           userToken,
           sendUser,
+          userId:userExists._id,
           status:true
         })
       }

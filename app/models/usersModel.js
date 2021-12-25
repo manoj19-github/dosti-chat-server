@@ -27,6 +27,10 @@ const userSchema=mongoose.Schema({
     type:String,
     trim:true,
     default:"https://img.favpng.com/25/13/19/samsung-galaxy-a8-a8-user-login-telephone-avatar-png-favpng-dqKEPfX7hPbc6SMVUCteANKwj.jpg",
+  },
+  isOnline:{
+    type:Boolean,
+    default:false
   }
 
 
