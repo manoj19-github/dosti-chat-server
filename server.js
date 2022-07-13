@@ -56,7 +56,7 @@ app.use(errorHandler)
 
 
 // server listening on
-const server=app.listen(PORT,async()=>{
+const server=app.listen(4000,async()=>{
   initCloudinary()
   await connectDB()
   console.log(`app is listening on PORT : ${PORT}`.yellow.underline.bold)

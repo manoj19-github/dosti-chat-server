@@ -16,6 +16,8 @@ const sendMessageCtrl=async(req,res)=>{
     let message=await Message.create(newMessage)
     message=await message.populate("sender","name pic")
     message=await message.populate("chat")
+    // message=await message.populate("latestMessage")
+    
     message=await User.populate(message,{
       path:"chat.users",
       select:"name pic email"
@@ -23,6 +25,10 @@ const sendMessageCtrl=async(req,res)=>{
 
     await Chat.findByIdAndUpdate(chatId,{
       latestMessage:message
+    })
+    message=await Chat.populate(message,{
+      path:"latestMessage",
+      select:"content"
     })
     return res.status(201).json({message,status:true})
 
