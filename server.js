@@ -14,7 +14,7 @@ const chatApiRoutes=require("./routes/chatApiRoutes")
 const messagesApiRoutes=require("./routes/messagesApiRoutes")
 
 const app=express()
-const PORT=process.env.PORT ||3300
+const PORT=process.env.PORT ||4000
 
 
 // General Middlewares
@@ -56,7 +56,7 @@ app.use(errorHandler)
 
 
 // server listening on
-const server=app.listen(4000,async()=>{
+const server=app.listen(PORT,async()=>{
   initCloudinary()
   await connectDB()
   console.log(`app is listening on PORT : ${PORT}`.yellow.underline.bold)
